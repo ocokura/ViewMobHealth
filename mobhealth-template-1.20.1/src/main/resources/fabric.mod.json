@@ -16,7 +16,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.ocoserver.MobHealth"
+          "net.ocoserver.ClientMain"
 		],
 		"client": [
 			"net.ocoserver.MobHealthClient"
