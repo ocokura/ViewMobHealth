@@ -21,10 +21,7 @@ public class ClientMain implements ClientModInitializer {
 				getVariousInfo.getMobHealth(player, world, 4.0F);
 				DisplayHealth.displayHealth();
 				DisplayHealth.unSee();
-			} else {
-				System.err.println("The player or world variable is null");
 			}
-
 		});
 	}
 }

@@ -6,6 +6,6 @@ public class Main implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		System.out.println("Modが起動");
+		System.out.println("Mod success");
 	}
 }

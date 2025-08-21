@@ -19,5 +19,4 @@ public class DisplayHealth {
             mob.setCustomNameVisible(false);
         }
     }
-
 }
