@@ -8,30 +8,46 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
+import java.util.List;
 import java.util.function.Predicate;
 
 public class getVariousInfo {
 
-    public static void getMobHealth(PlayerEntity player, float maxDistance, World world) {
+    public static void getMobHealth(PlayerEntity player, World world, float maxDistance) {
         Vec3d eyePos = player.getEyePos();
         Vec3d lookVec = player.getRotationVec(1.0F);
-        Vec3d endPos = eyePos.add(lookVec.multiply(maxDistance));
 
-        Box box = player.getBoundingBox()
-                .stretch(lookVec.multiply(maxDistance))
-                .expand(1.0D);
+        List<LivingEntity> entities = world.getEntitiesByClass(
+                LivingEntity.class,
+                player.getBoundingBox().expand(maxDistance),
+                e -> e != player
+        );
 
-        Predicate<Entity> predicate = (Entity entity) -> entity instanceof LivingEntity && entity.isAlive();
+        LivingEntity closestTarget = null;
+        double closestDist = Double.MAX_VALUE;
 
-        EntityHitResult hitResult = ProjectileUtil.getEntityCollision(world, player, eyePos, endPos, box,
-                predicate, maxDistance);
+        for (LivingEntity mob : entities) {
+            Vec3d mobPos = mob.getPos().add(0, mob.getHeight() * 0.5, 0);
+            Vec3d toMob = mobPos.subtract(eyePos);
+            double distance = toMob.length();
 
-        if (hitResult != null) {
-            LivingEntity targetEntity = (LivingEntity) hitResult.getEntity();
-            float entityHealth = targetEntity.getHealth();
-            float entityMaxHealth = targetEntity.getMaxHealth();
-            MobHealth.setValue(targetEntity, entityHealth, entityMaxHealth);
+            if (distance > maxDistance) MobHealth.setMob(mob);
+
+            double dot = lookVec.normalize().dotProduct(toMob.normalize());
+            if (dot < 0.2) MobHealth.setMob(mob);
+
+            if (distance < closestDist) {
+                closestTarget = mob;
+                closestDist = distance;
+            } else {
+                MobHealth.setMob(mob);
+            }
+        }
+
+        if (closestTarget != null) {
+            float entityHealth = closestTarget.getHealth();
+            float entityMaxHealth = closestTarget.getMaxHealth();
+            MobHealth.setValue(closestTarget, entityHealth, entityMaxHealth);
         }
     }
 }
