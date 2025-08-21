@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 import java.util.function.Predicate;
 
-public class GetNumber {
+public class getVariousInfo {
 
     public static void getMobHealth(PlayerEntity player, float maxDistance, World world) {
         Vec3d eyePos = player.getEyePos();
@@ -31,8 +31,7 @@ public class GetNumber {
             LivingEntity targetEntity = (LivingEntity) hitResult.getEntity();
             float entityHealth = targetEntity.getHealth();
             float entityMaxHealth = targetEntity.getMaxHealth();
-            MobHealth.setValue(entityHealth, entityMaxHealth);
+            MobHealth.setValue(targetEntity, entityHealth, entityMaxHealth);
         }
-
     }
 }

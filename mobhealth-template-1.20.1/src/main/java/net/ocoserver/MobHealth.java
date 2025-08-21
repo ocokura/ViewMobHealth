@@ -15,14 +15,20 @@ import java.util.function.Predicate;
 
 public class MobHealth {
 
+    private static LivingEntity targetEntity;
     private static float entityHealth;
     private static float entityMaxHealth;
 
-    public static void setValue(float entityHealth, float entityMaxHealth) {
+    public static void setValue(LivingEntity targetEntity, float entityHealth, float entityMaxHealth) {
         MobHealth.entityHealth = entityHealth;
         MobHealth.entityMaxHealth = entityMaxHealth;
+        MobHealth.targetEntity = targetEntity;
     }
-    
+
+    public static LivingEntity getTargetEntity() {return targetEntity;}
+    public static float getEntityHealth() {return entityHealth;}
+    public static float getEntityMaxHealth() {return entityMaxHealth;}
+
     }
 
 
