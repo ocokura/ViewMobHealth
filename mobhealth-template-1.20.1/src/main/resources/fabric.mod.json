@@ -16,10 +16,10 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-          "net.ocoserver.ClientMain"
+          "net.ocoserver.Main"
 		],
 		"client": [
-			"net.ocoserver.MobHealthClient"
+			"net.ocoserver.ClientMain"
 		]
 	},
 	"mixins": [
