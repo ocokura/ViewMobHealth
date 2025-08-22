@@ -1,15 +1,14 @@
 package net.ocoserver;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.Box;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.HashMap;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.Map;
 
 public class getVariousInfo {
 
@@ -31,23 +30,32 @@ public class getVariousInfo {
             Vec3d toMob = mobPos.subtract(eyePos);
             double distance = toMob.length();
 
-            if (distance > maxDistance) MobHealth.setMob(mob);
+            if (distance > maxDistance) {
+                mob.setCustomNameVisible(false);
+                continue;
+            }
 
             double dot = lookVec.normalize().dotProduct(toMob.normalize());
-            if (dot < 0.2) MobHealth.setMob(mob);
+
+            //条件を満たしたらモブを対象から外す (Some comments are in Japanese to facilitate development)
+            if (dot < 0.99) {
+                mob.setCustomNameVisible(false);
+                continue;
+            }
 
             if (distance < closestDist) {
                 closestTarget = mob;
                 closestDist = distance;
             } else {
-                MobHealth.setMob(mob);
+                mob.setCustomNameVisible(false);
             }
         }
 
         if (closestTarget != null) {
             float entityHealth = closestTarget.getHealth();
             float entityMaxHealth = closestTarget.getMaxHealth();
-            MobHealth.setValue(closestTarget, entityHealth, entityMaxHealth);
+            closestTarget.setCustomName(Text.of("HP:"+ entityHealth+"/"+entityMaxHealth));
+            closestTarget.setCustomNameVisible(true);
         }
     }
 }

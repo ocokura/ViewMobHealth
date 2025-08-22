@@ -8,4 +8,6 @@ public class Main implements ModInitializer {
 	public void onInitialize() {
 		System.out.println("Mod success");
 	}
+
+	//Unused, no plans to use
 }
