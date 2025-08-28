@@ -3,11 +3,11 @@ plugins {
 	id 'maven-publish'
 }
 
-version = project.mod_version
-group = project.maven_group
+version = "1.0.2"
+group = "net.ocoserver"
 
 base {
-	archivesName = project.archives_base_name
+	archivesName = "mobHealth"
 }
 
 repositories {
