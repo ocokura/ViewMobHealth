@@ -6,11 +6,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class getVariousInfo {
+public class GetVariousInfo {
 
     public static void getMobHealth(PlayerEntity player, World world, float maxDistance) {
         Vec3d eyePos = player.getEyePos();
@@ -31,31 +29,35 @@ public class getVariousInfo {
             double distance = toMob.length();
 
             if (distance > maxDistance) {
-                mob.setCustomNameVisible(false);
+                HUD.status = false;
                 continue;
             }
 
             double dot = lookVec.normalize().dotProduct(toMob.normalize());
 
+            if (!mob.isAlive()) {
+                HUD.status = false;
+                continue;
+            }
+
             //条件を満たしたらモブを対象から外す (Some comments are in Japanese to facilitate development)
-            if (dot < 0.99) {
-                mob.setCustomNameVisible(false);
+            if (dot < 0.9) {
+                HUD.status = false;
                 continue;
             }
 
             if (distance < closestDist) {
                 closestTarget = mob;
                 closestDist = distance;
-            } else {
-                mob.setCustomNameVisible(false);
-            }
+            } else { HUD.status = false; }
         }
 
         if (closestTarget != null) {
+            Text entityName = closestTarget.getType().getName();
             float entityHealth = closestTarget.getHealth();
             float entityMaxHealth = closestTarget.getMaxHealth();
-            closestTarget.setCustomName(Text.of("HP:"+ entityHealth+"/"+entityMaxHealth));
-            closestTarget.setCustomNameVisible(true);
+            HUD.setData(entityName, entityHealth, entityMaxHealth);
+            HUD.status = true;
         }
     }
 }
