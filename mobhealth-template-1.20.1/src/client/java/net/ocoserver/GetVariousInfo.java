@@ -27,37 +27,30 @@ public class GetVariousInfo {
             Vec3d mobPos = mob.getPos().add(0, mob.getHeight() * 0.5, 0);
             Vec3d toMob = mobPos.subtract(eyePos);
             double distance = toMob.length();
-
-            if (distance > maxDistance) {
-                HUD.status = false;
-                continue;
-            }
-
             double dot = lookVec.normalize().dotProduct(toMob.normalize());
 
-            if (!mob.isAlive()) {
-                HUD.status = false;
+            if (distance > maxDistance || !mob.isAlive() || dot < 0.9 || distance > closestDist) {
+                TargetMobData mobDataNone = new TargetMobData();
+                HUD.setStandardData(mobDataNone);
                 continue;
             }
-
-            //条件を満たしたらモブを対象から外す (Some comments are in Japanese to facilitate development)
-            if (dot < 0.9) {
-                HUD.status = false;
-                continue;
-            }
-
-            if (distance < closestDist) {
-                closestTarget = mob;
-                closestDist = distance;
-            } else { HUD.status = false; }
+            closestTarget = mob;
+            closestDist = distance;
         }
 
         if (closestTarget != null) {
-            Text entityName = closestTarget.getType().getName();
             float entityHealth = closestTarget.getHealth();
             float entityMaxHealth = closestTarget.getMaxHealth();
-            HUD.setData(entityName, entityHealth, entityMaxHealth);
-            HUD.status = true;
+
+            if (closestTarget instanceof PlayerEntity targetPlayer) {
+                Text playerName = targetPlayer.getName();
+                TargetMobData playerData = new TargetMobData(playerName, entityHealth, entityMaxHealth, true);
+                HUD.setStandardData(playerData);
+            } else {
+                Text entityName = closestTarget.getType().getName();
+                TargetMobData targetData = new TargetMobData(entityName, entityHealth, entityMaxHealth, true);
+                HUD.setStandardData(targetData);
+            }
         }
     }
 }
